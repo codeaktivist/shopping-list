@@ -1,8 +1,9 @@
 {% extends "layout.html" %}
 {% block body %}
         <h2>Hinzufügen</h2>
+        <p>Hallo {{ name }}, schön dass du da bist! (<a href="/logout">Logout</a>)</p>
         <form action="/add" method="get">
-            <input autocomplete="off" autofocus name="item" type="text" placeholder="Artikel">
+            <input autocomplete="off" autofocus name="item" type="text" placeholder="Artikel" required>
         </form>
         <h2>Einkaufsliste</h2>
         <table>
@@ -10,7 +11,6 @@
                 <tr>
                     <th>Artikel</th>
                     <th>Stk.</th>
-                    <th>Wer will's</th>
                     <th>Hab ich</th>
                 </tr>
             </thead>
@@ -19,7 +19,6 @@
                 <tr>
                     <td>{{ item }}</td>
                     <td>{{ count }}</td>
-                    <td>Martin</td>
                     <td>
                         <form action="/remove" method="get">
                             <input type="hidden" name="item" value="{{ item }}">
