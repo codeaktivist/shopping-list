@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block body %}
+        <h2>Hinzufügen</h2>
+        <p>Es wurde hinzugefügt: {{ item }}</p>
+        <h2>Auf der Liste ist</h2>
+        <ul>
+            {% for item, count in items.items() %}
+            <li>{{ item }} x {{ count }}</li>
+            {% endfor %}
+        </ul>
+{% endblock %}

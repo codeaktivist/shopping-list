@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block body %}
+        <h2>Hinzufügen</h2>
+        <form action="/add" method="get">
+            <input autocomplete="off" autofocus name="item" type="text" placeholder="Artikel">
+        </form>
+        <h2>Einkaufsliste</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Artikel</th>
+                    <th>Stk.</th>
+                    <th>Wer will's</th>
+                    <th>Hab ich</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item, count in items.items() %}
+                <tr>
+                    <td>{{ item }}</td>
+                    <td>{{ count }}</td>
+                    <td>Martin</td>
+                    <td>
+                        <form action="/remove" method="get">
+                            <input type="hidden" name="item" value="{{ item }}">
+                            <button>Del</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+{% endblock %}
