@@ -1,14 +1,8 @@
-from flask import Flask, render_template, request, redirect, make_response
+from flask import Flask, redirect, make_response, render_template, request, session
 
 # Configure app
 app = Flask(__name__)
-
-# Configure session and cookie
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
-
-# Global name
-name = ""
+app.secret_key = "dontyoustoreyoursuperdupersecretkeyhere"
 
 # Dictionary to store names:items{}
 names = {}
@@ -19,71 +13,99 @@ items = {}
 # Routes
 @app.route("/")
 def index():
-    # Get name from session cookie
-    name = request.cookies.get("name")
-    # Force login
-    if name == "" or name == None:
+    # Check active session
+    if not "name" in session:
         return redirect("/login")
-    # Load existing items or create new items{}
-    if not name in names:
-        names[name] = {}
+    # Read name from session
+    name = session["name"]
+    # Reject old session
+    if not session["name"] in names:
+        return redirect("/logout")
+
     return render_template("index.html", items=names[name], name=name)
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    global name
-    # Check if name gets passed
-    name = request.args.get("name", "")
-    if not name:
+    # GET: present login form to user
+    if request.method == "GET":
         return render_template("login.html")
-    else:
-        res = make_response(redirect("/"))
-        res.set_cookie("name", name)
-        return res
+    # POST: user submitted login form
+    name = request.form.get("name")
+    # no name -> redirect to login
+    if not name:
+        return redirect("/login")
+    # check name -> redirect to login
+    if len(name) == 0 or len(name) > 20:
+        return redirect("/login")
+    # new name -> add empty items dictionary
+    if not name in names:
+        names[name] = {}
+    # set session name
+    session["name"] = name
+    return redirect("/")
 
 @app.route("/logout")
 def logout():
-    global name
-    name = ""
-    res = make_response(redirect("/login"))
-    res.delete_cookie("name")
-    return res
+    # delete session name
+    session.pop("name", None)    
+    return redirect("/login")
 
 @app.route("/update")
 def update():
-    # Get name from session cookie
-    name = request.cookies.get("name")
-    # Force login
-    if name == "" or name == None:
-        return redirect("/login")
-    if name == "" or name == None:
-        return "Please <a href='/login'>log in</a>"
+    # Check active session
+    if not "name" in session:
+        return "<p>Error, please <a href='/login'>log in</a>!</p>"
+    # Read name from session
+    name = session["name"]
+    # Reject old session
+    if not session["name"] in names:
+        return "<p>Error, please <a href='/login'>log in</a>!</p>"
+
+    # Respond updated items
     return render_template("update.html", items=names[name], name=name)
 
-@app.route("/add")
+@app.route("/add", methods=["GET"])
 def add():
-    # Get name from session cookie
-    name = request.cookies.get("name")
-    # Force login
-    if name == "" or name == None:
+    # Check active session
+    if not "name" in session:
         return redirect("/login")
-    item = request.args.get("item", "default")
+    # Read name from session
+    name = session["name"]
+    # Reject old session
+    if not session["name"] in names:
+        return redirect("/logout")
+
+    # Get item, add item
+    item = request.args.get("item")
     if item in names[name]:
         names[name][item] += 1
     else:
         names[name][item] = 1
-    print(f"added: {item}")
-    return redirect("/")
+    return render_template("update.html", items=names[name], name=name)
 
-@app.route("/remove")
+@app.route("/remove", methods=["GET"])
 def remove():
-    # Get name from session cookie
-    name = request.cookies.get("name")
-    # Force login
-    if name == "" or name == None:
+    # Check active session
+    if not "name" in session:
         return redirect("/login")
-    item = request.args.get("item", "default")
+    # Read name from session
+    name = session["name"]
+    # Reject old session
+    if not session["name"] in names:
+        return redirect("/logout")
+
+    # Get item, remove item
+    item = request.args.get("item")
     if item in names[name]:
         del names[name][item]
-    print(f"removed: {item}")
-    return redirect("/")
+    return render_template("update.html", items=names[name], name=name)
+
+def checkName():
+    # Check active session
+    if not "name" in session:
+        return redirect("/login")
+    # Read name from session
+    name = session["name"]
+    # Reject old session
+    if not session["name"] in names:
+        return redirect("/logout")
