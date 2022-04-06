@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect, make_response
-# from flask_session import Session
 
 # Configure app
 app = Flask(__name__)
@@ -20,7 +19,6 @@ items = {}
 # Routes
 @app.route("/")
 def index():
-    global name
     # Get name from session cookie
     name = request.cookies.get("name")
     # Force login
@@ -29,7 +27,6 @@ def index():
     # Load existing items or create new items{}
     if not name in names:
         names[name] = {}
-    
     return render_template("index.html", items=names[name], name=name)
 
 @app.route("/login")
@@ -52,9 +49,24 @@ def logout():
     res.delete_cookie("name")
     return res
 
+@app.route("/update")
+def update():
+    # Get name from session cookie
+    name = request.cookies.get("name")
+    # Force login
+    if name == "" or name == None:
+        return redirect("/login")
+    if name == "" or name == None:
+        return "Please <a href='/login'>log in</a>"
+    return render_template("update.html", items=names[name], name=name)
+
 @app.route("/add")
 def add():
-    global name
+    # Get name from session cookie
+    name = request.cookies.get("name")
+    # Force login
+    if name == "" or name == None:
+        return redirect("/login")
     item = request.args.get("item", "default")
     if item in names[name]:
         names[name][item] += 1
@@ -65,7 +77,11 @@ def add():
 
 @app.route("/remove")
 def remove():
-    global name
+    # Get name from session cookie
+    name = request.cookies.get("name")
+    # Force login
+    if name == "" or name == None:
+        return redirect("/login")
     item = request.args.get("item", "default")
     if item in names[name]:
         del names[name][item]

@@ -15,18 +15,12 @@
                 </tr>
             </thead>
             <tbody>
-                {% for item, count in items.items() %}
-                <tr>
-                    <td>{{ item }}</td>
-                    <td>{{ count }}</td>
-                    <td>
-                        <form action="/remove" method="get">
-                            <input type="hidden" name="item" value="{{ item }}">
-                            <button>Del</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
+                {% include "update.html" %}
             </tbody>
         </table>
+        <script>
+            // Call ajax page refresh
+            const intervall = 5000;
+            let refreshIntervall = setInterval(refreshAjax, intervall, "{{ name }}");
+        </script>    
 {% endblock %}

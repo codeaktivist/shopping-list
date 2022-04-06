@@ -1,0 +1,12 @@
+                {% for item, count in items.items() %}
+                <tr>
+                    <td>{{ item }}</td>
+                    <td>{{ count }}</td>
+                    <td>
+                        <form action="/remove" method="get">
+                            <input type="hidden" name="item" value="{{ item }}">
+                            <button>Del</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
