@@ -2,7 +2,7 @@
 {% block body %}
         <h2>Hinzufügen</h2>
         <p>Hallo {{ name }}, schön dass du da bist! (<a href="/logout">Logout</a>)</p>
-        <form action="/add" method="get">
+        <form action="#" onsubmit="addAjax(this.item.value); this.item.value = ''; return false" method="get">
             <input autocomplete="off" autofocus name="item" type="text" placeholder="Artikel" required>
         </form>
         <h2>Einkaufsliste</h2>
@@ -17,10 +17,5 @@
             <tbody>
                 {% include "update.html" %}
             </tbody>
-        </table>
-        <script>
-            // Call ajax page refresh
-            const intervall = 5000;
-            let refreshIntervall = setInterval(refreshAjax, intervall, "{{ name }}");
-        </script>    
+        </table>  
 {% endblock %}

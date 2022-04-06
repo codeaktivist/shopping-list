@@ -3,8 +3,7 @@
                     <td>{{ item }}</td>
                     <td>{{ count }}</td>
                     <td>
-                        <form action="/remove" method="get">
-                            <input type="hidden" name="item" value="{{ item }}">
+                        <form action="#" onsubmit="modifyAjax('{{ item }}', 0); return false"  method="post">
                             <button>Del</button>
                         </form>
                     </td>
