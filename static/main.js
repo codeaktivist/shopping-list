@@ -1,9 +1,3 @@
-// Call ajax page refresh
-document.addEventListener("DOMContentLoaded", function(event) {
-    const REFRESH = 5000;
-    let refreshIntervall = setInterval(refreshAjax, REFRESH);
-});
-
 function refreshAjax() {
     let ajax = new XMLHttpRequest();
     ajax.open("GET", "/update", true);
