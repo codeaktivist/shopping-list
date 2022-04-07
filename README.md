@@ -17,6 +17,12 @@ install Flask:
 
 `$ pip install -U Flask`
 
+install sqlite3:
+
+https://www.sqlite.org/download.html
+
+... already preinstalled on any Mac :)
+
 run flask on localhost:
 
 `$ flask run`
@@ -40,4 +46,4 @@ Check off items when done shopping. Easy :)
 
 ## Under the hood
 
-This version is **DBless** just for the fun of it. Items and Users are NOT persistent and only live in RAM.
+This version uses SQLite3 to store users, lists and items.
